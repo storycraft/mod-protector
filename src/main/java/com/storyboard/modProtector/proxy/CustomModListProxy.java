@@ -1,10 +1,10 @@
-package com.storyboard.proxy;
+package com.storyboard.modProtector.proxy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.storyboard.wrapper.FakeModContainer;
+import com.storyboard.modProtector.wrapper.FakeModContainer;
 
 import net.minecraftforge.fml.common.ModContainer;
 

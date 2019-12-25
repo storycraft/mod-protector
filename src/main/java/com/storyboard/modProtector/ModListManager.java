@@ -1,8 +1,8 @@
-package com.storyboard;
+package com.storyboard.modProtector;
 
-import com.storyboard.proxy.DefaultModListProxy;
-import com.storyboard.proxy.IModListProxy;
-import com.storyboard.proxy.SyncedModListProxy;
+import com.storyboard.modProtector.proxy.DefaultModListProxy;
+import com.storyboard.modProtector.proxy.IModListProxy;
+import com.storyboard.modProtector.proxy.SyncedModListProxy;
 
 import org.apache.logging.log4j.Logger;
 

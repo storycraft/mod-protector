@@ -1,12 +1,12 @@
-package com.storyboard.proxy;
+package com.storyboard.modProtector.proxy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.storyboard.util.Reflect;
-import com.storyboard.wrapper.FakeModContainer;
+import com.storyboard.modProtector.util.Reflect;
+import com.storyboard.modProtector.wrapper.FakeModContainer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;

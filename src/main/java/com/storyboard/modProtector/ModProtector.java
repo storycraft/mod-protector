@@ -1,4 +1,4 @@
-package com.storyboard;
+package com.storyboard.modProtector;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -8,8 +8,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.storyboard.inject.HandshakeInjector;
-import com.storyboard.proxy.IModListProxy;
+import com.storyboard.modProtector.inject.HandshakeInjector;
+import com.storyboard.modProtector.proxy.IModListProxy;
 
 import org.apache.logging.log4j.Logger;
 

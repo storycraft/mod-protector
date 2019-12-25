@@ -1,4 +1,4 @@
-package com.storyboard.inject;
+package com.storyboard.modProtector.inject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Lists;
-import com.storyboard.ModProtector;
-import com.storyboard.util.Reflect;
+import com.storyboard.modProtector.ModProtector;
+import com.storyboard.modProtector.util.Reflect;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

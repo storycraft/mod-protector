@@ -1,4 +1,4 @@
-package com.storyboard.proxy;
+package com.storyboard.modProtector.proxy;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.storyboard.util;
+package com.storyboard.modProtector.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,10 +1,10 @@
-package com.storyboard.proxy;
+package com.storyboard.modProtector.proxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.storyboard.ModProtector;
+import com.storyboard.modProtector.ModProtector;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
