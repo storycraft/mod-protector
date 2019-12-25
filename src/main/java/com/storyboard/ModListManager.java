@@ -28,6 +28,8 @@ public class ModListManager {
     public ModListManager(Minecraft mc, Logger logger) {
         this.client = mc;
         this.logger = logger;
+        
+        modListProxy = new SyncedModListProxy(mc);
     }
 
     public Minecraft getClient() {

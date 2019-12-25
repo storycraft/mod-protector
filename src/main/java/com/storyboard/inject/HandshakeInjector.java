@@ -155,8 +155,10 @@ public class HandshakeInjector {
         }
 
         protected FMLHandshakeMessage getMessageToEncode(FMLHandshakeMessage handshakeMessage) {
-            if (handshakeMessage instanceof FMLHandshakeMessage.ModList) {
-                return new FMLHandshakeMessage.ModList(mod.getOrDefaultModListProxy().getModList());
+            if (!mod.getClient().isIntegratedServerRunning()) {
+                if (handshakeMessage instanceof FMLHandshakeMessage.ModList) {
+                    return new FMLHandshakeMessage.ModList(mod.getOrDefaultModListProxy().getModList());
+                }
             }
 
             return handshakeMessage;
