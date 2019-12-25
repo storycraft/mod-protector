@@ -3,18 +3,22 @@ package com.storyboard.proxy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.storyboard.ModProtector;
+import com.storyboard.wrapper.FakeModContainer;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
-public class SkippingModListProxy implements IModListProxy {
+public class ProtectedModListProxy implements IModListProxy {
+    
+    private Map<String, String> modListToAdd;
+    private Map<String, String> modListToRemove;
 
-    private ModProtector mod;
-
-    public SkippingModListProxy(ModProtector mod) {
-        this.mod = mod;
+    public ProtectedModListProxy(Map<String, String> modListToAdd, Map<String, String> modListToRemove) {
+        this.modListToAdd = modListToAdd;
+        this.modListToRemove = modListToRemove;
     }
 
     @Override
@@ -26,7 +30,11 @@ public class SkippingModListProxy implements IModListProxy {
         while (modIter.hasNext()) {
             ModContainer container = modIter.next();
 
-            if ("mod-protector".equals(container.getModId())) {
+            if (ModProtector.MODID.equals(container.getModId())) {
+                continue;
+            }
+
+            if (this.modListToRemove.containsKey(container.getModId())) {
                 continue;
             }
 
@@ -35,6 +43,9 @@ public class SkippingModListProxy implements IModListProxy {
             System.out.println("allow acessing " + container.getModId() + " to server");
         }
 
+        for (String id : modListToAdd.keySet()) {
+            list.add(new FakeModContainer(id, modListToAdd.get(id)));
+        }
 
         return list;
     }

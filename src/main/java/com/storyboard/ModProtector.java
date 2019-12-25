@@ -8,48 +8,35 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.storyboard.inject.HandshakeInjector;
-import com.storyboard.proxy.DefaultModListProxy;
 import com.storyboard.proxy.IModListProxy;
-import com.storyboard.proxy.SkippingModListProxy;
 
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = ModProtector.MODID, name = ModProtector.NAME, version = ModProtector.VERSION, clientSideOnly = true)
 public class ModProtector {
 
-    private static IModListProxy defaultModListProxy;
-
     public static final String MODID = "mod-protector";
     public static final String NAME = "ModProtector";
     public static final String VERSION = "1.0";
 
-    static {
-        defaultModListProxy = new DefaultModListProxy();
-    }
-
-    public static IModListProxy getDefaultModListProxy() {
-        return defaultModListProxy;
-    }
-
-    private static Logger logger;
+    private Logger logger;
 
     private Minecraft client;
 
     private HandshakeInjector injector;
 
-    private IModListProxy modListProxy;
+    private ModListManager modListManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
         client = Minecraft.getMinecraft();
+        modListManager = new ModListManager(client, logger);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        this.modListProxy = new SkippingModListProxy(this);
-
         injector = new HandshakeInjector(this);
         MinecraftForge.EVENT_BUS.register(injector);
         
@@ -68,20 +55,20 @@ public class ModProtector {
         return injector;
     }
 
+    public ModListManager getModListManager() {
+        return modListManager;
+    }
+
     public IModListProxy getModListProxy() {
-        return this.modListProxy;
+        return modListManager.getModListProxy();
     }
 
     public void setModListProxy(IModListProxy proxy) {
-        this.modListProxy = proxy;
+        modListManager.setModListProxy(proxy);
     }
 
     public IModListProxy getOrDefaultModListProxy() {
-        if (this.modListProxy != null) {
-            return this.modListProxy;
-        }
-
-        return ModProtector.defaultModListProxy;
+        return modListManager.getOrDefaultModListProxy();
     }
     
     
