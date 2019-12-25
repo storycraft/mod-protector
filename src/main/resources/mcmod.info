@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mod-protector",
+  "name": "ModProtector",
+  "description": "Hide mods and keep privacy from stupid servers.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["storycraft"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
