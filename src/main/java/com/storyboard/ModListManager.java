@@ -2,6 +2,7 @@ package com.storyboard;
 
 import com.storyboard.proxy.DefaultModListProxy;
 import com.storyboard.proxy.IModListProxy;
+import com.storyboard.proxy.SyncedModListProxy;
 
 import org.apache.logging.log4j.Logger;
 

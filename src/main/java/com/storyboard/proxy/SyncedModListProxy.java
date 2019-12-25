@@ -50,6 +50,8 @@ public class SyncedModListProxy implements IModListProxy {
             list.add(new FakeModContainer(id, extendedData.modData.get(id)));
         }
 
+        System.out.println("Syncing modList data with server");
+
         return list;
     }
 

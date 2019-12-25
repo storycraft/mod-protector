@@ -121,8 +121,6 @@ public class HandshakeInjector {
             if (msg instanceof CPacketCustomPayload) {
                 CPacketCustomPayload payload = (CPacketCustomPayload) msg;
                 if ("FML|HS".equals(payload.getChannelName())) {
-                    System.out.println("readed " + payload + " channel: " + payload.getChannelName());
-
                     ByteBuf buf = payload.getBufferData().duplicate();
 
                     byte discriminator = buf.readByte();
