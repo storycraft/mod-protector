@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.storyboard.inject.HandshakeInjector;
@@ -37,10 +38,13 @@ public class ModProtector {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        logger.info("Mod loaded successfully");
+    }
+
+    @EventHandler
+    public void onPostInit(FMLPostInitializationEvent event) {
         injector = new HandshakeInjector(this);
         MinecraftForge.EVENT_BUS.register(injector);
-        
-        logger.info("Mod loaded successfully");
     }
 
     public Minecraft getClient() {

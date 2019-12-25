@@ -51,14 +51,18 @@ public class HandshakeInjector {
         discriminators.put((byte) -1, FMLHandshakeMessage.HandshakeAck.class);
         discriminators.put((byte) -2, FMLHandshakeMessage.HandshakeReset.class);
 
-        try {
-            singletonField.unlockFinal();
-            singletonField.set(null, this.patchFMLClientHandler());
-
-            mod.getLogger().info("Patched FMLClientHandler! " + FMLClientHandler.instance().getClass().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            mod.getClient().addScheduledTask(() -> {
+                try {
+                    singletonField.unlockFinal();
+                    singletonField.set(null, this.patchFMLClientHandler());
+        
+                    mod.getLogger().info("Patched FMLClientHandler! " + FMLClientHandler.instance().getClass().getName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }).start(); // TASK HACK
     }
 
     public void onUpdate() {
