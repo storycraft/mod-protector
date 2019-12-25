@@ -68,7 +68,12 @@ public class HandshakeInjector {
     }
 
     protected void onDispatcherUpdate() {
-        System.out.println("handler updated! -> " + clientHandler);
+        mod.getLogger().info("Handler updated! -> " + clientHandler);
+
+        if (clientHandler.getNetworkManager().isLocalChannel()) {
+            mod.getLogger().info("Local channel detected. disabling...");
+            return;
+        }
 
         clientHandler.getNetworkManager().channel().pipeline().addAfter("encoder", "custom_fml_handler", new PatchedCustomHandler());
     }
@@ -125,8 +130,7 @@ public class HandshakeInjector {
 
                     byte discriminator = buf.readByte();
                     Class<? extends FMLHandshakeMessage> clazz = discriminators.get(discriminator);
-                    if(clazz == null)
-                    {
+                    if(clazz == null) {
                         throw new NullPointerException("Wrong payload received " + payload.getChannelName());
                     }
 
@@ -153,10 +157,8 @@ public class HandshakeInjector {
         }
 
         protected FMLHandshakeMessage getMessageToEncode(FMLHandshakeMessage handshakeMessage) {
-            if (!mod.getClient().isIntegratedServerRunning()) {
-                if (handshakeMessage instanceof FMLHandshakeMessage.ModList) {
-                    return new FMLHandshakeMessage.ModList(mod.getOrDefaultModListProxy().getModList());
-                }
+            if (handshakeMessage instanceof FMLHandshakeMessage.ModList) {
+                return new FMLHandshakeMessage.ModList(mod.getOrDefaultModListProxy().getModList());
             }
 
             return handshakeMessage;
