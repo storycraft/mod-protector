@@ -3,10 +3,6 @@ package com.storyboard.modProtector.inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.SocketAddress;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Lists;
 import com.storyboard.modProtector.ModProtector;
 import com.storyboard.modProtector.util.Reflect;
 

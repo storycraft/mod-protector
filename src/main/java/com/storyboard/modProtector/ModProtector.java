@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import com.storyboard.modProtector.config.ConfigManager;
+import com.storyboard.modProtector.gui.GuiManager;
 import com.storyboard.modProtector.inject.HandshakeInjector;
 import com.storyboard.modProtector.proxy.IModListProxy;
 
@@ -26,7 +28,11 @@ public class ModProtector {
 
     private HandshakeInjector injector;
 
+    private ConfigManager configManager;
+
     private ModListManager modListManager;
+    
+    private GuiManager guiManager;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -34,17 +40,25 @@ public class ModProtector {
 
         client = Minecraft.getMinecraft();
         modListManager = new ModListManager(client, logger);
+
+        configManager = new ConfigManager();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        injector = new HandshakeInjector(this);
+
+        guiManager = new GuiManager(this);
+
+        MinecraftForge.EVENT_BUS.register(injector);
+        MinecraftForge.EVENT_BUS.register(guiManager);
+
         logger.info("Mod loaded successfully");
     }
 
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-        injector = new HandshakeInjector(this);
-        MinecraftForge.EVENT_BUS.register(injector);
+
     }
 
     public Minecraft getClient() {
@@ -53,6 +67,14 @@ public class ModProtector {
     
     public Logger getLogger() {
         return logger;
+    }
+    
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    public GuiManager getGuiManager() {
+        return guiManager;
     }
 
     public HandshakeInjector getInjector() {
