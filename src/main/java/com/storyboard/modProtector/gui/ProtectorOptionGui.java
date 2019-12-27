@@ -9,6 +9,7 @@ import com.storyboard.modProtector.ModProtector;
 import com.storyboard.modProtector.config.IConfigFile;
 import com.storyboard.modProtector.config.json.JsonConfigFile;
 import com.storyboard.modProtector.profile.ProfileManager;
+import com.storyboard.modProtector.proxy.ProxyType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -198,6 +199,15 @@ public class ProtectorOptionGui extends GuiScreen {
                     this.height / 2, 0xffffffff);
         } else {
             this.listGui.drawScreen(mouseX, mouseY, partialTicks);
+
+            this.drawGradientRect(135, 35, width - 5, height - 50, 0x80000000, 0x80000000);
+
+            if (selectedInfo != null) {
+                fontRenderer.drawString("Name: " + selectedInfo.getName(), 155, 55, 0xffffffff);
+                fontRenderer.drawString("Type: " + mod.getModListManager().getProxyProfileType(selectedInfo.config), 155, 75, 0xffffffff);
+                fontRenderer.drawString("Description: " + mod.getModListManager().getProxyProfileDescription(selectedInfo.config), 155, 95, 0xffffffff);
+            }
+
             this.newConfigField.drawTextBox();
         }
 

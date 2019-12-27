@@ -6,21 +6,27 @@ import net.minecraft.client.Minecraft;
 
 public enum ProxyType {
 
-    DEFAULT(0, (Minecraft mc) -> new DefaultModListProxy(mc)),
-    CUSTOM(1, (Minecraft mc) -> new CustomModListProxy(mc)),
-    PROTECTED(2, (Minecraft mc) -> new ProtectedModListProxy(mc)),
-    SYNCED(3, (Minecraft mc) -> new SyncedModListProxy(mc));
+    DEFAULT(0, "Default", (Minecraft mc) -> new DefaultModListProxy(mc)),
+    CUSTOM(1, "Custom", (Minecraft mc) -> new CustomModListProxy(mc)),
+    PROTECTED(2, "Inspection", (Minecraft mc) -> new ProtectedModListProxy(mc)),
+    SYNCED(3, "Synced", (Minecraft mc) -> new SyncedModListProxy(mc));
     
     private int id;
+    private String name;
     private Function<Minecraft, IModListProxy> constructor;
 
-    ProxyType(int id, Function<Minecraft, IModListProxy> constructor) {
+    ProxyType(int id, String name, Function<Minecraft, IModListProxy> constructor) {
         this.id = id;
+        this.name = name;
         this.constructor = constructor;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public IModListProxy createNew(Minecraft mc) {

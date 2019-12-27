@@ -28,11 +28,11 @@ public class ProtectedModListProxy implements IModListProxy {
         this(mc, new HashMap<>(), new ArrayList<>());
     }
 
-    public ProtectedModListProxy(Minecraft mc, Map<String, String> modListToAdd, List<String> modListToRemove) {
+    public ProtectedModListProxy(Minecraft mc, Map<String, String> modListToAdd, List<String> modListHidden) {
         this.mc = mc;
 
         this.modListToAdd = modListToAdd;
-        this.modListHidden = modListToRemove;
+        this.modListHidden = modListHidden;
     }
 
     @Override
@@ -53,8 +53,6 @@ public class ProtectedModListProxy implements IModListProxy {
             }
 
             list.add(container);
-
-            System.out.println("allow acessing " + container.getModId() + " to server");
         }
 
         for (String id : modListToAdd.keySet()) {

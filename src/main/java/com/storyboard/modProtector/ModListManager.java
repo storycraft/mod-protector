@@ -65,9 +65,33 @@ public class ModListManager {
         return defaultModListProxy;
     }
 
+    public int getProxyProfileType(JsonConfigEntry entry) {
+        try {
+            return entry.get("type").getAsInt();
+        } catch (Exception e) {
+            logger.error("Error while reading proxy profile type. Setting default. " + e);
+            
+            entry.set("type", ProxyType.DEFAULT.getId());
+
+            return ProxyType.DEFAULT.getId();
+        }
+    }
+
+    public String getProxyProfileDescription(JsonConfigEntry entry) {
+        try {
+            return entry.get("desc").getAsString();
+        } catch (Exception e) {
+            logger.error("Error while reading proxy profile description. Setting none. " + e);
+            
+            entry.set("desc", "");
+
+            return "";
+        }
+    }
+
     public void setFromProxyProfile(JsonConfigEntry entry) {
         try {
-            int type = entry.get("type").getAsInt();
+            int type = getProxyProfileType(entry);
 
             JsonConfigEntry settingsEntry = entry.getObject("settings");
 
@@ -82,7 +106,7 @@ public class ModListManager {
             this.setModListProxy(proxy);
 
         } catch (Exception e) {
-            logger.error("Error while reading proxy profile. Applying none. " + e);
+            logger.error("Error while applying proxy profile. Applying none. " + e);
             this.setModListProxy(null);
         }
 
