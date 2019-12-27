@@ -67,6 +67,7 @@ public class ProtectedModListProxy implements IModListProxy {
     @Override
     public void fromConfig(JsonConfigEntry entry) {
         modListToAdd.clear();
+        modListHidden.clear();
 
         JsonArray appendList;
         try {
