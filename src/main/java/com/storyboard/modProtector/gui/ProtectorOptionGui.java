@@ -156,20 +156,20 @@ public class ProtectorOptionGui extends GuiScreen {
         if (keyCode == 1) { //ESC
             this.saveProfileConfig();
         } else if (keyCode == 28) { // ENTER
+            if (newConfigField.isFocused() && !newConfigField.getText().isEmpty()) {
 
-            String newConfigName = newConfigField.getText() + ".profile";
+                String newConfigName = newConfigField.getText() + ".profile";
 
-            if (newConfigField.isFocused() && !newConfigField.getText().isEmpty() && !createNewConfig(newConfigName)) {
-
-                for (ConfigInfo configInfo : profileInfoList) {
-
-                    if (configInfo.name.equals(newConfigName)) {
-                        selectedInfo = configInfo;
-                        break;
+                if (!createNewConfig(newConfigName)) {
+                    for (ConfigInfo configInfo : profileInfoList) {
+                        if (configInfo.name.equals(newConfigName)) {
+                            selectedInfo = configInfo;
+                            break;
+                        }
                     }
-
                 }
 
+                newConfigField.setFocused(false);
             }
         } else if (newConfigField.isFocused()) {
             newConfigField.writeText(typedChar + "");
