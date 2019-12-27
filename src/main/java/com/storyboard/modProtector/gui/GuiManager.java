@@ -28,7 +28,7 @@ public class GuiManager {
     @SubscribeEvent
     public void onGuiAction(ActionPerformedEvent.Post e) {
         if (e.getGui() instanceof GuiOptions && e.getButton().id == ENTRY_BTN_ID) {
-            mod.getClient().displayGuiScreen(new ProtectorOptionGui(e.getGui(), mod.getConfigManager()));
+            mod.getClient().displayGuiScreen(new ProtectorOptionGui(mod.getClient(), e.getGui(), mod.getProfileManager()));
         }
     }
 

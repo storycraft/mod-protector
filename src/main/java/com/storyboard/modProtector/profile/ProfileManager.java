@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.storyboard.modProtector.config.ConfigManager;
-import com.storyboard.modProtector.config.IConfigFile;
 import com.storyboard.modProtector.config.json.JsonConfigFile;
 import com.storyboard.modProtector.config.json.JsonConfigPrettyFile;
 import com.storyboard.modProtector.util.AsyncTask;
@@ -13,23 +12,22 @@ import com.storyboard.modProtector.util.Parallel;
 
 public class ProfileManager {
 
-    private static final String GLOBAL_CONFIG_NAME = "config.json";
+    private static final String PROFILE_CONFIG_NAME = "config.json";
 
     private ConfigManager configManager;
 
-    private JsonConfigFile globalConfig;
+    private JsonConfigFile profileConfig;
 
-    private Map<String, IConfigFile> profileList;
+    private Map<String, JsonConfigFile> profileMap;
 
     public ProfileManager(ConfigManager configManager) {
         this.configManager = configManager;
 
-        profileList = new ConcurrentHashMap<>();
+        profileMap = new ConcurrentHashMap<>();
 
-        globalConfig = new JsonConfigFile();
+        profileConfig = new JsonConfigFile();
 
         configManager.getProfileStorage().createStorageDirectory();
-        reloadProfileConfig();
     }
 
     public ConfigManager getConfigManager() {
@@ -37,37 +35,42 @@ public class ProfileManager {
     }
 
     public JsonConfigFile getProfileConfig() {
-        return globalConfig;
+        return profileConfig;
+    }
+    
+    public Map<String, JsonConfigFile> getProfileMap() {
+        return profileMap;
     }
 
     public boolean hasProfile(String name) {
-        return profileList.containsKey(name);
+        return profileMap.containsKey(name);
     }
 
-    public IConfigFile reloadProfileConfig() {
-        configManager.loadConfig(globalConfig, GLOBAL_CONFIG_NAME);
-        return globalConfig;
+    public JsonConfigFile reloadProfileConfig() {
+        configManager.loadConfig(profileConfig, PROFILE_CONFIG_NAME).getSync();
+
+        return profileConfig;
     }
 
-    public AsyncTask<IConfigFile> getProfile(String name) {
+    public AsyncTask<JsonConfigFile> getProfile(String name) {
         return new AsyncTask<>(() -> {
             if (hasProfile(name)) {
-                return profileList.get(name);
+                return profileMap.get(name);
             }
 
             return reloadProfile(name).getSync();
         });
     }
 
-    public AsyncTask<IConfigFile> reloadProfile(String name) {
+    public AsyncTask<JsonConfigFile> reloadProfile(String name) {
         return new AsyncTask<>(() -> {
-            IConfigFile previousConfig = profileList.remove(name);
+            JsonConfigFile previousConfig = profileMap.remove(name);
 
-            IConfigFile profileConfig = previousConfig != null ? previousConfig : new JsonConfigPrettyFile();
+            JsonConfigFile profileConfig = previousConfig != null ? previousConfig : new JsonConfigPrettyFile();
 
-            configManager.loadConfig(profileConfig, name).getSync();
+            configManager.loadProfile(profileConfig, name).getSync();
 
-            profileList.put(name, profileConfig);
+            profileMap.put(name, profileConfig);
 
             return profileConfig;
         });
@@ -81,10 +84,10 @@ public class ProfileManager {
                 return name.endsWith(".profile");
             });
         
-            profileList.clear();
+            profileMap.clear();
         
             Parallel.forEach(profileFiles, (profileName) -> {
-                profileList.put(profileName, reloadProfile(profileName).getSync());
+                profileMap.put(profileName, reloadProfile(profileName).getSync());
                 return null;
             });
 
@@ -92,8 +95,12 @@ public class ProfileManager {
         });
     }
 
-    public AsyncTask<Void> saveProfile(IConfigFile profileConfig, String name) {
-        return configManager.saveConfig(profileConfig, name);
+    public AsyncTask<Void> saveProfile(String name, JsonConfigFile profile) {
+        return configManager.saveProfile(profile, name);
+    }
+
+    public AsyncTask<Void> saveProfileConfig(JsonConfigFile profileConfig) {
+        return configManager.saveConfig(profileConfig, PROFILE_CONFIG_NAME);
     }
 
 }
