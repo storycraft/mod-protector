@@ -13,12 +13,14 @@ import com.storyboard.modProtector.profile.ProfileManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 public class ProtectorOptionGui extends GuiScreen {
 
     private static final int DONE_BTN = 8814;
+    private static final int NEW_CONFIG_FIELD = 1234;
 
     private Minecraft client;
 
@@ -38,6 +40,8 @@ public class ProtectorOptionGui extends GuiScreen {
 
 
     private ProfileListGui listGui;
+
+    private GuiTextField newConfigField;
 
     public ProtectorOptionGui(Minecraft client, GuiScreen lastGui, ProfileManager profileManager) {
         super();
@@ -105,19 +109,72 @@ public class ProtectorOptionGui extends GuiScreen {
         }
     }
 
+    protected boolean createNewConfig(String name) {
+        if (profileManager.hasProfile(name)) {
+            return false;
+        }
+
+        JsonConfigFile configFile = profileManager.getProfile(name).getSync();
+        ConfigInfo configInfo = new ConfigInfo(name, configFile);
+
+        profileInfoList.add(configInfo);
+
+        return true;
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        boolean wasFocused = newConfigField.isFocused();
+
+        newConfigField.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!wasFocused && wasFocused != this.newConfigField.isFocused()) {
+            newConfigField.setTextColor(0xffffffff);
+            newConfigField.setText("");
+        }
+
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
     @Override
     public void initGui() {
         this.listGui = new ProfileListGui();
 
         addButton(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 40, 150, 20, "Done"));
 
+        newConfigField = new GuiTextField(NEW_CONFIG_FIELD, fontRenderer, 5, this.height - 35, 125, 20);
+
+        newConfigField.setFocused(false);
+        newConfigField.setCanLoseFocus(true);
+        newConfigField.setText("Ex) new-config");
+        newConfigField.setTextColor(0xff888888);
+
         super.initGui();
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == 1) {
+        if (keyCode == 1) { //ESC
             this.saveProfileConfig();
+        } else if (keyCode == 28) { // ENTER
+
+            String newConfigName = newConfigField.getText() + ".profile";
+
+            if (newConfigField.isFocused() && !newConfigField.getText().isEmpty() && !createNewConfig(newConfigName)) {
+
+                for (ConfigInfo configInfo : profileInfoList) {
+
+                    if (configInfo.name.equals(newConfigName)) {
+                        selectedInfo = configInfo;
+                        break;
+                    }
+
+                }
+
+            }
+        } else if (newConfigField.isFocused()) {
+            newConfigField.writeText(typedChar + "");
+
+            return;
         }
 
         super.keyTyped(typedChar, keyCode);
@@ -131,7 +188,7 @@ public class ProtectorOptionGui extends GuiScreen {
             client.displayGuiScreen(lastGui);
             return;
         }
-
+ 
         super.actionPerformed(button);
     }
 
@@ -146,6 +203,7 @@ public class ProtectorOptionGui extends GuiScreen {
                     this.height / 2, 0xffffffff);
         } else {
             this.listGui.drawScreen(mouseX, mouseY, partialTicks);
+            this.newConfigField.drawTextBox();
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
