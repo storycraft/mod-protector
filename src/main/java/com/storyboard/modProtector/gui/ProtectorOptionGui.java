@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraftforge.fml.client.GuiScrollingList;
+import cpw.mods.fml.client.GuiScrollingList;
 
 public class ProtectorOptionGui extends GuiScreen {
 
@@ -217,7 +217,7 @@ public class ProtectorOptionGui extends GuiScreen {
     public class ProfileListGui extends GuiScrollingList {
 
         public ProfileListGui() {
-            super(client, 125, ProtectorOptionGui.this.height, 35, ProtectorOptionGui.this.height - 50, 5, 20, ProtectorOptionGui.this.width, ProtectorOptionGui.this.height);
+            super(client, 125, ProtectorOptionGui.this.height, 35, ProtectorOptionGui.this.height - 50, 5, 20);
         }
 
         @Override

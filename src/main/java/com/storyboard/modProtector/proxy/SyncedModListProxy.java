@@ -11,9 +11,9 @@ import com.storyboard.modProtector.wrapper.FakeModContainer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraftforge.fml.client.ExtendedServerListData;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.client.ExtendedServerListData;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.ModContainer;
 
 public class SyncedModListProxy implements IModListProxy {
 

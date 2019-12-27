@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.storyboard.modProtector.config.json.JsonConfigEntry;
 
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.common.ModContainer;
 
 public interface IModListProxy {
 

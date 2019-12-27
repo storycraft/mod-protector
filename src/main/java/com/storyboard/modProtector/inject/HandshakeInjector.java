@@ -3,6 +3,9 @@ package com.storyboard.modProtector.inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.SocketAddress;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.storyboard.modProtector.ModProtector;
 import com.storyboard.modProtector.util.Reflect;
 
@@ -12,29 +15,30 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandler;
 import io.netty.channel.ChannelPromise;
 import io.netty.channel.SimpleChannelInboundHandler;
-import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
-import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.IFMLSidedHandler;
+import cpw.mods.fml.common.network.handshake.FMLHandshakeMessage;
 
 public class HandshakeInjector {
 
     private static Reflect.WrappedField<FMLClientHandler, FMLClientHandler> singletonField;
+    private static Reflect.WrappedField<IFMLSidedHandler, FMLCommonHandler> sidedDelegateField;
 
     static {
-
         singletonField = Reflect.getField(FMLClientHandler.class, "INSTANCE");
+        sidedDelegateField = Reflect.getField(FMLCommonHandler.class, "sidedDelegate");
     }
 
     private ModProtector mod;
 
     private NetHandlerPlayClient clientHandler;
 
-    private final Byte2ObjectMap<Class<? extends FMLHandshakeMessage>> discriminators = new Byte2ObjectOpenHashMap<>();
+    private final Map<Byte, Class<? extends FMLHandshakeMessage>> discriminators = new HashMap<>();
 
     public HandshakeInjector(final ModProtector mod) {
         this.mod = mod;
@@ -43,16 +47,20 @@ public class HandshakeInjector {
         discriminators.put((byte) 0, FMLHandshakeMessage.ServerHello.class);
         discriminators.put((byte) 1, FMLHandshakeMessage.ClientHello.class);
         discriminators.put((byte) 2, FMLHandshakeMessage.ModList.class);
-        discriminators.put((byte) 3, FMLHandshakeMessage.RegistryData.class);
+        //discriminators.put((byte) 3, FMLHandshakeMessage.RegistryData.class);
         discriminators.put((byte) -1, FMLHandshakeMessage.HandshakeAck.class);
         discriminators.put((byte) -2, FMLHandshakeMessage.HandshakeReset.class);
 
         new Thread(() -> {
             mod.getClient().func_152344_a(() -> {
                 try {
+                    FMLClientHandler patched = this.patchFMLClientHandler();
+
                     singletonField.unlockFinal();
-                    singletonField.set(null, this.patchFMLClientHandler());
-        
+                    singletonField.set(null, patched);
+
+                    sidedDelegateField.set(FMLCommonHandler.instance(), patched);
+
                     mod.getLogger().info("Patched FMLClientHandler! " + FMLClientHandler.instance().getClass().getName());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -75,7 +83,8 @@ public class HandshakeInjector {
             return;
         }
 
-        clientHandler.getNetworkManager().channel().pipeline().addAfter("encoder", "custom_fml_handler", new PatchedCustomHandler());
+        clientHandler.getNetworkManager().channel().pipeline().addAfter("encoder", "custom_fml_handler",
+                new PatchedCustomHandler());
     }
 
     public class PatchedCustomHandler extends SimpleChannelInboundHandler<Packet> implements ChannelOutboundHandler {
@@ -123,15 +132,15 @@ public class HandshakeInjector {
 
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-            if (msg instanceof CPacketCustomPayload) {
-                CPacketCustomPayload payload = (CPacketCustomPayload) msg;
-                if ("FML|HS".equals(payload.getChannelName())) {
-                    ByteBuf buf = payload.getBufferData().duplicate();
+            if (msg instanceof C17PacketCustomPayload) {
+                C17PacketCustomPayload payload = (C17PacketCustomPayload) msg;
+                if ("FML|HS".equals(payload.func_149559_c())) {
+                    ByteBuf buf = Unpooled.wrappedBuffer(payload.func_149558_e());
 
                     byte discriminator = buf.readByte();
                     Class<? extends FMLHandshakeMessage> clazz = discriminators.get(discriminator);
                     if(clazz == null) {
-                        throw new NullPointerException("Wrong payload received " + payload.getChannelName());
+                        throw new NullPointerException("Wrong payload received " + payload.func_149559_c());
                     }
 
                     FMLHandshakeMessage decodedMessage = clazz.newInstance();
@@ -143,7 +152,7 @@ public class HandshakeInjector {
                     buffer.writeByte(discriminator);
                     messageToEncode.toBytes(buffer);
 
-                    ctx.write(new CPacketCustomPayload(payload.getChannelName(), buffer));
+                    ctx.write(new C17PacketCustomPayload(payload.func_149559_c(), buffer));
                     return;
                 }
             }

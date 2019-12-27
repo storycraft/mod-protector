@@ -14,8 +14,8 @@ import com.storyboard.modProtector.config.json.JsonConfigEntry;
 import com.storyboard.modProtector.wrapper.FakeModContainer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 public class ProtectedModListProxy implements IModListProxy {
 

@@ -9,12 +9,12 @@ import java.util.Set;
 
 import com.google.common.eventbus.EventBus;
 
-import net.minecraftforge.fml.common.LoadController;
-import net.minecraftforge.fml.common.MetadataCollection;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.VersionRange;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.MetadataCollection;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.VersionRange;
 
 public class FakeModContainer implements ModContainer {
 
@@ -149,26 +149,6 @@ public class FakeModContainer implements ModContainer {
     @Override
     public List<String> getOwnedPackages() {
         return null;
-    }
-
-    @Override
-    public boolean shouldLoadInEnvironment() {
-        return false;
-    }
-
-    @Override
-    public URL getUpdateUrl() {
-        return null;
-    }
-
-    @Override
-    public void setClassVersion(int classVersion) {
-
-    }
-
-    @Override
-    public int getClassVersion() {
-        return 0;
     }
 
 }

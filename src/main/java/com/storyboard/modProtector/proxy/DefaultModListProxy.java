@@ -8,8 +8,8 @@ import com.storyboard.modProtector.ModProtector;
 import com.storyboard.modProtector.config.json.JsonConfigEntry;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 public class DefaultModListProxy implements IModListProxy {
 
