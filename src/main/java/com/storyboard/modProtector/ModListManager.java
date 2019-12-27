@@ -31,6 +31,13 @@ public class ModListManager {
         defaultModListProxy = new DefaultModListProxy(mc);
         
         modListProxy = null;
+
+        profileManager.reloadProfileConfig();
+        String selected = profileManager.getSelectedProfile();
+
+        if (profileManager.hasProfile(selected)) {
+            setFromProxyProfile(profileManager.getProfile(selected).getSync());
+        }
     }
 
     public Minecraft getClient() {
