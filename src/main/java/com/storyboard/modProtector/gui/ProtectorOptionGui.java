@@ -111,7 +111,7 @@ public class ProtectorOptionGui extends GuiScreen {
     public void initGui() {
         this.listGui = new ProfileListGui();
 
-        addButton(new GuiButton(DONE_BTN, this.width - 308, this.height - 40, 148, 20, "Done"));
+        addButton(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 40, 150, 20, "Done"));
 
         super.initGui();
     }
@@ -156,7 +156,7 @@ public class ProtectorOptionGui extends GuiScreen {
     public class ProfileListGui extends GuiScrollingList {
 
         public ProfileListGui() {
-            super(client, 128, ProtectorOptionGui.this.height, 35, ProtectorOptionGui.this.height - 50, 5, 20, ProtectorOptionGui.this.width, ProtectorOptionGui.this.height);
+            super(client, 125, ProtectorOptionGui.this.height, 35, ProtectorOptionGui.this.height - 50, 5, 20, ProtectorOptionGui.this.width, ProtectorOptionGui.this.height);
         }
 
         @Override
@@ -169,7 +169,7 @@ public class ProtectorOptionGui extends GuiScreen {
             if (profileInfoList.size() <= index) {
                 return;
             }
-            
+
             selectedInfo = profileInfoList.get(index);
         }
 
