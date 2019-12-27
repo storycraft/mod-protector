@@ -169,13 +169,8 @@ public class ProtectorOptionGui extends GuiScreen {
             if (profileInfoList.size() <= index) {
                 return;
             }
-
-            ConfigInfo lastSelected = selectedInfo;
+            
             selectedInfo = profileInfoList.get(index);
-
-            if (lastSelected != selectedInfo) {
-                isConfigChanged = true;
-            }
         }
 
         @Override
