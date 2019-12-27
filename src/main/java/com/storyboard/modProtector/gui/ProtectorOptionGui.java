@@ -35,7 +35,6 @@ public class ProtectorOptionGui extends GuiScreen {
 
     private boolean isConfigLoaded;
 
-    private boolean isConfigChanged;
     private List<ConfigInfo> changedInfoList;
 
 
@@ -58,7 +57,6 @@ public class ProtectorOptionGui extends GuiScreen {
 
         this.isConfigLoaded = false;
 
-        this.isConfigChanged = false;
         this.changedInfoList = new ArrayList<>();
 
         initConfig();
@@ -121,9 +119,7 @@ public class ProtectorOptionGui extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (keyCode == 1) {
-            if (isConfigChanged) {
-                this.saveProfileConfig();
-            }
+            this.saveProfileConfig();
         }
 
         super.keyTyped(typedChar, keyCode);
@@ -132,8 +128,7 @@ public class ProtectorOptionGui extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button.id == DONE_BTN) {
-            if (isConfigChanged)
-                this.saveProfileConfig();
+            this.saveProfileConfig();
 
             client.displayGuiScreen(lastGui);
             return;
