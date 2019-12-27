@@ -119,7 +119,7 @@ public class ProtectorOptionGui extends GuiScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         boolean wasFocused = newConfigField.isFocused();
 
         newConfigField.mouseClicked(mouseX, mouseY, mouseButton);
@@ -135,9 +135,9 @@ public class ProtectorOptionGui extends GuiScreen {
     public void initGui() {
         this.listGui = new ProfileListGui();
 
-        addButton(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 35, 150, 20, "Done"));
+        buttonList.add(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 35, 150, 20, "Done"));
 
-        newConfigField = new GuiTextField(NEW_CONFIG_FIELD, fontRenderer, 5, this.height - 35, 125, 20);
+        newConfigField = new GuiTextField(fontRendererObj, 5, this.height - 35, 125, 20);
 
         newConfigField.setFocused(false);
         newConfigField.setCanLoseFocus(true);
@@ -148,7 +148,7 @@ public class ProtectorOptionGui extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) { //ESC
             this.saveProfileConfig();
         } else if (keyCode == 28) { // ENTER
@@ -177,7 +177,7 @@ public class ProtectorOptionGui extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(GuiButton button) {
         if (button.id == DONE_BTN) {
             this.saveProfileConfig();
 
@@ -192,10 +192,10 @@ public class ProtectorOptionGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
-        this.drawCenteredString(this.fontRenderer, "ModProtector settings", this.width / 2, 15, 0xffffffff);
+        this.drawCenteredString(fontRendererObj, "ModProtector settings", this.width / 2, 15, 0xffffffff);
 
         if (!isConfigLoaded) {
-            this.drawCenteredString(this.fontRenderer, "Loading config and profiles...", this.width / 2,
+            this.drawCenteredString(fontRendererObj, "Loading config and profiles...", this.width / 2,
                     this.height / 2, 0xffffffff);
         } else {
             this.listGui.drawScreen(mouseX, mouseY, partialTicks);
@@ -203,9 +203,9 @@ public class ProtectorOptionGui extends GuiScreen {
             this.drawGradientRect(135, 35, width - 5, height - 50, 0x80000000, 0x80000000);
 
             if (selectedInfo != null) {
-                fontRenderer.drawString("Name: " + selectedInfo.getName(), 155, 55, 0xffffffff);
-                fontRenderer.drawString("Type: " + mod.getModListManager().getProxyProfileType(selectedInfo.config), 155, 75, 0xffffffff);
-                fontRenderer.drawString("Description: " + mod.getModListManager().getProxyProfileDescription(selectedInfo.config), 155, 95, 0xffffffff);
+                fontRendererObj.drawString("Name: " + selectedInfo.getName(), 155, 55, 0xffffffff);
+                fontRendererObj.drawString("Type: " + mod.getModListManager().getProxyProfileType(selectedInfo.config), 155, 75, 0xffffffff);
+                fontRendererObj.drawString("Description: " + mod.getModListManager().getProxyProfileDescription(selectedInfo.config), 155, 95, 0xffffffff);
             }
 
             this.newConfigField.drawTextBox();
@@ -252,7 +252,7 @@ public class ProtectorOptionGui extends GuiScreen {
 
             ConfigInfo info = profileInfoList.get(slotIdx);
 
-            fontRenderer.drawString(fontRenderer.trimStringToWidth(info.getName(), this.listWidth - 6), this.left + 3, slotTop + 4, 0xffffffff);
+            fontRendererObj.drawString(fontRendererObj.trimStringToWidth(info.getName(), this.listWidth - 6), this.left + 3, slotTop + 4, 0xffffffff);
         }
 
     }

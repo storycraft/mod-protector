@@ -48,7 +48,7 @@ public class HandshakeInjector {
         discriminators.put((byte) -2, FMLHandshakeMessage.HandshakeReset.class);
 
         new Thread(() -> {
-            mod.getClient().addScheduledTask(() -> {
+            mod.getClient().func_152344_a(() -> {
                 try {
                     singletonField.unlockFinal();
                     singletonField.set(null, this.patchFMLClientHandler());
@@ -78,14 +78,14 @@ public class HandshakeInjector {
         clientHandler.getNetworkManager().channel().pipeline().addAfter("encoder", "custom_fml_handler", new PatchedCustomHandler());
     }
 
-    public class PatchedCustomHandler extends SimpleChannelInboundHandler<Packet<?>> implements ChannelOutboundHandler {
+    public class PatchedCustomHandler extends SimpleChannelInboundHandler<Packet> implements ChannelOutboundHandler {
 
         public PatchedCustomHandler() {
 
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, Packet<?> msg) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, Packet msg) throws Exception {
             ctx.fireChannelRead(msg);
         }
 

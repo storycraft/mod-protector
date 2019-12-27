@@ -20,15 +20,15 @@ public class GuiManager {
 
     @SubscribeEvent
     public void onGuiInit(InitGuiEvent.Post e) {
-        if (e.getGui() instanceof GuiOptions) {
-            e.getButtonList().add(new GuiButton(ENTRY_BTN_ID, e.getGui().width - 100, e.getGui().height - 22, 98, 20, "ModProtector"));
+        if (e.gui instanceof GuiOptions) {
+            e.buttonList.add(new GuiButton(ENTRY_BTN_ID, e.gui.width - 100, e.gui.height - 22, 98, 20, "ModProtector"));
         }
     }
 
     @SubscribeEvent
     public void onGuiAction(ActionPerformedEvent.Post e) {
-        if (e.getGui() instanceof GuiOptions && e.getButton().id == ENTRY_BTN_ID) {
-            mod.getClient().displayGuiScreen(new ProtectorOptionGui(mod, e.getGui()));
+        if (e.gui instanceof GuiOptions && e.button.id == ENTRY_BTN_ID) {
+            mod.getClient().displayGuiScreen(new ProtectorOptionGui(mod, e.gui));
         }
     }
 

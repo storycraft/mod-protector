@@ -31,7 +31,7 @@ public class SyncedModListProxy implements IModListProxy {
 
     @Override
     public List<ModContainer> getModList() {
-        ServerData serverData = mc.getCurrentServerData();
+        ServerData serverData = mc.func_147104_D();
 
         if (serverData == null) {
             return Lists.newArrayList();
