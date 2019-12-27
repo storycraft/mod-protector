@@ -139,7 +139,7 @@ public class ProtectorOptionGui extends GuiScreen {
     public void initGui() {
         this.listGui = new ProfileListGui();
 
-        addButton(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 40, 150, 20, "Done"));
+        addButton(new GuiButton(DONE_BTN, 135 + (this.width - 135) / 2 - 75, this.height - 35, 150, 20, "Done"));
 
         newConfigField = new GuiTextField(NEW_CONFIG_FIELD, fontRenderer, 5, this.height - 35, 125, 20);
 
