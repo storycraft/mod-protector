@@ -60,7 +60,7 @@ public class ConfigManager {
             try {
                 config.load(new ByteArrayInputStream(storage.getSync(name)));
             } catch (Exception e) {
-                logger.error(name + " 로드 중 오류가 발생했습니다. " + e.getLocalizedMessage());
+                logger.error("Error while loading config " + name + " : " + e.getLocalizedMessage());
             }
 
             return null;
@@ -74,7 +74,7 @@ public class ConfigManager {
         
                 storage.saveSync(output.toByteArray(), name);
             } catch (IOException e) {
-                logger.error(name + " 저장 중 오류가 발생 했습니다 " + e.getLocalizedMessage());
+                logger.error("Error while loading config " + name + " : " + e.getLocalizedMessage());
             }
 
             return null;
