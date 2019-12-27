@@ -1,8 +1,10 @@
 package com.storyboard.modProtector;
 
+import com.storyboard.modProtector.config.json.JsonConfigEntry;
+import com.storyboard.modProtector.profile.ProfileManager;
 import com.storyboard.modProtector.proxy.DefaultModListProxy;
 import com.storyboard.modProtector.proxy.IModListProxy;
-import com.storyboard.modProtector.proxy.SyncedModListProxy;
+import com.storyboard.modProtector.proxy.ProxyType;
 
 import org.apache.logging.log4j.Logger;
 
@@ -10,31 +12,37 @@ import net.minecraft.client.Minecraft;
 
 public class ModListManager {
 
-    private static IModListProxy defaultModListProxy;
-
-    static {
-        defaultModListProxy = new DefaultModListProxy();
-    }
-
-    public static IModListProxy getDefaultModListProxy() {
-        return defaultModListProxy;
-    }
+    private IModListProxy defaultModListProxy;
 
     private Logger logger;
 
     private Minecraft client;
 
+    private ProfileManager profileManager;
+
     private IModListProxy modListProxy;
 
-    public ModListManager(Minecraft mc, Logger logger) {
+    public ModListManager(Minecraft mc, ProfileManager profileManager, Logger logger) {
         this.client = mc;
         this.logger = logger;
+
+        this.profileManager = profileManager;
+
+        defaultModListProxy = new DefaultModListProxy(mc);
         
-        modListProxy = new SyncedModListProxy(mc);
+        modListProxy = null;
     }
 
     public Minecraft getClient() {
         return this.client;
+    }
+
+    public ProfileManager getProfileManager() {
+        return profileManager;
+    }
+
+    public IModListProxy getDefaultModListProxy() {
+        return defaultModListProxy;
     }
     
     public Logger getLogger() {
@@ -54,6 +62,29 @@ public class ModListManager {
             return this.modListProxy;
         }
 
-        return ModListManager.defaultModListProxy;
+        return defaultModListProxy;
+    }
+
+    public void setFromProxyProfile(JsonConfigEntry entry) {
+        try {
+            int type = entry.get("type").getAsInt();
+
+            JsonConfigEntry settingsEntry = entry.getObject("settings");
+
+            if (settingsEntry == null) {
+                entry.set("settings", settingsEntry = entry.createEntry());
+            }
+
+            IModListProxy proxy = ProxyType.findById(type).createNew(client);
+
+            proxy.fromConfig(settingsEntry);
+
+            this.setModListProxy(proxy);
+
+        } catch (Exception e) {
+            logger.error("Error while reading proxy profile. Applying none. " + e);
+            this.setModListProxy(null);
+        }
+
     }
 }

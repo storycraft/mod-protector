@@ -42,10 +42,11 @@ public class ModProtector {
         logger = event.getModLog();
 
         client = Minecraft.getMinecraft();
-        modListManager = new ModListManager(client, logger);
 
         configManager = new ConfigManager(new File(event.getModConfigurationDirectory(), ModProtector.MODID), logger);
         profileManager = new ProfileManager(configManager);
+
+        modListManager = new ModListManager(client, profileManager, logger);
     }
 
     @EventHandler

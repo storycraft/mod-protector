@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.storyboard.modProtector.config.json.JsonConfigEntry;
 import com.storyboard.modProtector.util.Reflect;
 import com.storyboard.modProtector.wrapper.FakeModContainer;
 
@@ -55,4 +56,9 @@ public class SyncedModListProxy implements IModListProxy {
         return list;
     }
 
+    @Override
+    public void fromConfig(JsonConfigEntry entry) {
+        
+    }
+    
 }

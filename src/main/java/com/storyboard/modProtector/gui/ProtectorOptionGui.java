@@ -2,10 +2,10 @@ package com.storyboard.modProtector.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.storyboard.modProtector.ModProtector;
 import com.storyboard.modProtector.config.IConfigFile;
 import com.storyboard.modProtector.config.json.JsonConfigFile;
 import com.storyboard.modProtector.profile.ProfileManager;
@@ -22,13 +22,14 @@ public class ProtectorOptionGui extends GuiScreen {
     private static final int DONE_BTN = 8814;
     private static final int NEW_CONFIG_FIELD = 1234;
 
+    private ModProtector mod;
+
     private Minecraft client;
 
     private GuiScreen lastGui;
 
     private ProfileManager profileManager;
 
-    private JsonConfigFile profileConfig;
     private List<ConfigInfo> profileInfoList;
 
     private ConfigInfo selectedInfo;
@@ -43,16 +44,16 @@ public class ProtectorOptionGui extends GuiScreen {
 
     private GuiTextField newConfigField;
 
-    public ProtectorOptionGui(Minecraft client, GuiScreen lastGui, ProfileManager profileManager) {
+    public ProtectorOptionGui(ModProtector mod, GuiScreen lastGui) {
         super();
 
-        this.client = client;
+        this.mod = mod;
         
         this.lastGui = lastGui;
 
-        this.profileManager = profileManager;
+        client = mod.getClient();
+        profileManager = mod.getProfileManager();
 
-        this.profileConfig = null;
         this.profileInfoList = new ArrayList<>();
 
         this.selectedInfo = null;
@@ -63,7 +64,7 @@ public class ProtectorOptionGui extends GuiScreen {
     }
 
     protected void initConfig() {
-        profileConfig = profileManager.reloadProfileConfig();
+        profileManager.reloadProfileConfig();
 
         profileManager.loadAllProfile().run().thenRun(() -> {
 
@@ -71,15 +72,7 @@ public class ProtectorOptionGui extends GuiScreen {
 
             profileInfoList.clear();
 
-            String activeProfileName = "";
-
-            if (profileConfig.contains("selected_profile")) {
-                try {
-                    activeProfileName = profileConfig.get("selected_profile").getAsString();
-                } catch (Exception e) {
-
-                }
-            }
+            String activeProfileName = profileManager.getSelectedProfile();
 
             for (String name : profileMap.keySet()) {
                 ConfigInfo info = new ConfigInfo(name, profileMap.get(name));
@@ -97,10 +90,12 @@ public class ProtectorOptionGui extends GuiScreen {
 
     protected void saveProfileConfig() {
         if (selectedInfo != null) {
-            profileConfig.set("selected_profile", selectedInfo.name);
+            profileManager.setSelectedProfile(selectedInfo.getName());
+
+            mod.getModListManager().setFromProxyProfile(selectedInfo.config);
         }
 
-        profileManager.saveProfileConfig(profileConfig).getSync();
+        profileManager.saveProfileConfig().getSync();
 
         for (ConfigInfo changedInfo : profileInfoList) {
             if (changedInfo.isChanged()) {

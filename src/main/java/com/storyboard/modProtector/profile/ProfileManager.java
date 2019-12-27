@@ -99,7 +99,21 @@ public class ProfileManager {
         return configManager.saveProfile(profile, name);
     }
 
-    public AsyncTask<Void> saveProfileConfig(JsonConfigFile profileConfig) {
+    public void setSelectedProfile(String name) {
+        profileConfig.set("selectedProfile", name);
+    }
+
+    public String getSelectedProfile() {
+        try {
+            return profileConfig.get("selectedProfile").getAsString();
+        } catch (Exception e) {
+            profileConfig.set("selectedProfile", "");
+
+            return "";
+        }
+    }
+
+    public AsyncTask<Void> saveProfileConfig() {
         return configManager.saveConfig(profileConfig, PROFILE_CONFIG_NAME);
     }
 
