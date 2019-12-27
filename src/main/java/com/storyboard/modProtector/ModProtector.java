@@ -8,9 +8,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import java.io.File;
+
 import com.storyboard.modProtector.config.ConfigManager;
 import com.storyboard.modProtector.gui.GuiManager;
 import com.storyboard.modProtector.inject.HandshakeInjector;
+import com.storyboard.modProtector.profile.ProfileManager;
 import com.storyboard.modProtector.proxy.IModListProxy;
 
 import org.apache.logging.log4j.Logger;
@@ -23,14 +26,14 @@ public class ModProtector {
     public static final String VERSION = "1.0";
 
     private Logger logger;
-
     private Minecraft client;
 
     private HandshakeInjector injector;
 
     private ConfigManager configManager;
-
     private ModListManager modListManager;
+
+    private ProfileManager profileManager;
     
     private GuiManager guiManager;
 
@@ -41,7 +44,8 @@ public class ModProtector {
         client = Minecraft.getMinecraft();
         modListManager = new ModListManager(client, logger);
 
-        configManager = new ConfigManager();
+        configManager = new ConfigManager(new File(event.getModConfigurationDirectory(), ModProtector.MODID), logger);
+        profileManager = new ProfileManager(configManager);
     }
 
     @EventHandler
@@ -71,6 +75,10 @@ public class ModProtector {
     
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+    
+    public ProfileManager getProfileManager() {
+        return profileManager;
     }
 
     public GuiManager getGuiManager() {

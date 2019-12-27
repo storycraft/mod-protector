@@ -30,7 +30,7 @@ public class ProtectorOptionGui extends GuiScreen {
     {
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRenderer, "ModProtector Settings", this.width / 2, 15, 16777215);
-        
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
