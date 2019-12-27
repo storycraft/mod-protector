@@ -35,8 +35,6 @@ public class ProtectorOptionGui extends GuiScreen {
 
     private boolean isConfigLoaded;
 
-    private List<ConfigInfo> changedInfoList;
-
 
 
     private ProfileListGui listGui;
@@ -56,8 +54,6 @@ public class ProtectorOptionGui extends GuiScreen {
         this.selectedInfo = null;
 
         this.isConfigLoaded = false;
-
-        this.changedInfoList = new ArrayList<>();
 
         initConfig();
     }
@@ -102,8 +98,10 @@ public class ProtectorOptionGui extends GuiScreen {
 
         profileManager.saveProfileConfig(profileConfig).getSync();
 
-        for (ConfigInfo changedInfo : changedInfoList) {
-            profileManager.saveProfile(changedInfo.name, changedInfo.config).getSync();
+        for (ConfigInfo changedInfo : profileInfoList) {
+            if (changedInfo.isChanged()) {
+                profileManager.saveProfile(changedInfo.name, changedInfo.config).getSync();
+            }
         }
     }
 
@@ -202,9 +200,13 @@ public class ProtectorOptionGui extends GuiScreen {
 
         private JsonConfigFile config;
 
+        private boolean changed;
+
         public ConfigInfo(String name, JsonConfigFile config) {
             this.name = name;
             this.config = config;
+
+            this.changed = false;
         }
 
         public String getName() {
@@ -213,6 +215,14 @@ public class ProtectorOptionGui extends GuiScreen {
         
         public IConfigFile getConfig() {
             return config;
+        }
+
+        public void markChanged() {
+            this.changed |= true;
+        }
+        
+        public boolean isChanged() {
+            return changed;
         }
 
     }
