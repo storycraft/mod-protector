@@ -8,7 +8,8 @@ public enum ProxyType {
 
     DEFAULT(0, (Minecraft mc) -> new DefaultModListProxy(mc)),
     CUSTOM(1, (Minecraft mc) -> new CustomModListProxy(mc)),
-    PROTECTED(2, (Minecraft mc) -> new ProtectedModListProxy(mc));
+    PROTECTED(2, (Minecraft mc) -> new ProtectedModListProxy(mc)),
+    SYNCED(3, (Minecraft mc) -> new SyncedModListProxy(mc));
     
     private int id;
     private Function<Minecraft, IModListProxy> constructor;
